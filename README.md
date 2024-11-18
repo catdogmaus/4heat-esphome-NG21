@@ -5,7 +5,7 @@ This is a simple YAML file meant to use with https://github.com/leoshusar/4heat-
 
 ### Usage
 
-This is ESPHome yaml file. To use it you have to use ESP8266 or ESP32 board and additional hardware according to istructions. It is possible that it will work with some other board but it has been tested with this two. You are fully responsible for any changes to your fireplace hardware or software that you intend to make herewith and for all risks involved.
+This is ESPHome yaml file. To use it you have to use ESP8266 or ESP32 board and additional hardware according to istructions. It is possible that it will work with some other boards but it has been tested only with this two. You are fully responsible for any changes to your fireplace hardware or software that you intend to make herewith and for all risks involved.
 
 ### Hardware
 
