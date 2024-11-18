@@ -1,0 +1,289 @@
+substitutions:
+  name: "4heat"
+  friendly_name: 4heat
+
+esphome:
+  name: ${name}
+  friendly_name: ${friendly_name}
+  name_add_mac_suffix: false
+  project:
+    name: NG21.catdognaus
+    version: '1.0'
+
+esp8266:
+  board: d1_mini
+
+# Enable logging
+logger:
+  baud_rate: 0
+
+# Enable Home Assistant API
+api:
+
+# Allow Over-The-Air updates
+ota:
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+# In combination with the `ap` this allows the user
+# to provision wifi credentials to the device via WiFi AP.
+captive_portal:
+
+external_components:
+  source: github://leoshusar/4heat-esphome
+
+uart:
+  tx_pin: GPIO1
+  rx_pin: GPIO3
+  baud_rate: 9600
+
+fourheat:
+
+switch:
+  - id: state_switch
+    name: State
+    platform: fourheat
+    restore_mode: DISABLED
+    datapoint: J30001
+    on_datapoint: J30253
+    off_datapoint: J30254
+    on_data: '1'
+    off_data: '1'
+    parser: |-
+      auto size = data.size();
+      return
+        data[size - 1] != '0' ||
+        data[size - 2] != '0';
+
+  - platform: fourheat
+    id: charging_motor_off
+    datapoint: B20698
+    on_data: '1'
+    off_data: '0'
+    parser: return data[data.size() - 1] != '0';
+
+  - platform: fourheat
+    id: Cleaning_Motor_Off
+    datapoint: B20701
+    on_data: '1'
+    off_data: '0'
+    parser: return data[data.size() - 1] != '0';
+
+  - platform: fourheat
+    id: Cleaning_Motor_2_Off
+    datapoint: B20700
+    on_data: '1'
+    off_data: '0'
+    parser: return data[data.size() - 1] != '0';
+
+
+  - platform: template
+    name: Enable night mode menu
+    lambda: |-
+      if (id(charging_motor_off).state) {
+        return true; // if night mode enabled, switch indicates ON
+      } else {
+        return false; // else OFF
+      }
+    turn_on_action:
+      - switch.turn_on: charging_motor_off
+      - switch.turn_on: Cleaning_Motor_Off
+      - switch.turn_on: Cleaning_Motor_2_Off
+      - select.set:
+          id: power
+          option: "P3"
+    turn_off_action:
+      - switch.turn_off: charging_motor_off
+      - switch.turn_off: Cleaning_Motor_Off
+      - switch.turn_off: Cleaning_Motor_2_Off
+      - select.set:
+          id: power
+          option: "Auto"
+
+text_sensor:
+  - id: state
+    name: State
+    platform: fourheat
+    datapoint: J30001
+    options:
+      0: "OFF"
+      1: "Check Up"
+      2: "Ignition"
+      3: "Stabilization"
+      4: "Ignition"
+      5: "Run"
+      6: "Modulation"
+      7: "Extinguishing"
+      8: "Safety"
+      9: "Block"
+      10: "Recover Ignition"
+      11: "Standby"
+      30: "Ignition"
+      31: "Ignition"
+      32: "Ignition"
+      33: "Ignition"
+      34: "Ignition"
+
+  - id: error
+    name: Error
+    platform: fourheat
+    datapoint: J30002
+    options:
+      0: "No"
+      1: "Safety Thermostat HV1: signalled also in case of Stove OFF"
+      2: "Safety PressureSwitch HV2: signalled with Combustion Fan ON"
+      3: "Extinguishing for Exhausting Temperature lowering"
+      4: "Extinguishing for water over Temperature"
+      5: "Extinguishing for Exhausting over Temperature"
+      6: "unknown"
+      7: "Encoder Error: No Encoder Signal (in case of P25=1 or 2)"
+      8: "Encoder Error: Combustion Fan regulation failed (in case of P25=1 or 2)"
+      9: "Low pressure in to the Boiler"
+      10: "High pressure in to the Boiler Error"
+      11: "DAY and TIME not correct due to prolonged absence of Power Supply"
+      12: "Failed Ignition"
+      13: "Ignition"
+      14: "Ignition"
+      15: "Lack of Voltage Supply"
+      16: "Ignition"
+      17: "Ignition"
+      18: "Lack of Voltage Supply"
+
+  - id: combustion_power
+    name: Combustion power
+    platform: fourheat
+    datapoint: J30011
+    icon: "mdi:heating-coil"
+    options:
+      1: "P1"
+      2: "P2"
+      3: "P3"
+      4: "P4"
+      5: "P5"
+      6: "Cleaning"
+      7: "Standby"
+      8: "Ignition 2"
+      9: "Modulation"
+      10: "Ignition P0"
+      11: "MAX P"
+      12: "Extinguish"
+      100: "Off"
+      110: "Off"
+      120: "Pmax Test"
+      255: "Ignition"
+      0: "Stabilizing"
+
+button:
+  - id: clear_error
+    name: Clear error
+    platform: fourheat
+    datapoint: J30255
+
+
+select:
+  - id: power
+    name: Power
+    platform: fourheat
+    datapoint: B20364
+    options:
+      1: "P1"
+      2: "P2"
+      3: "P3"
+      4: "P4"
+      5: "P5"
+      6: "Auto"
+    
+
+binary_sensor:
+  - id: stove_offline
+    name: Stove offline
+    platform: fourheat
+    type: module_offline
+
+  - id: room_thermostat_state
+    name: Room thermostat state
+    platform: fourheat
+    datapoint: J40007
+    parser: return data[data.size() - 3] == '0';
+
+
+sensor:
+  - id: exhaust_temperature
+    name: Exhaust temperature
+    platform: fourheat
+    datapoint: J30005
+    device_class: temperature
+    unit_of_measurement: °C
+
+  - id: buffer_temperature
+    name: Buffer temperature
+    platform: fourheat
+    datapoint: J30012
+    device_class: temperature
+    unit_of_measurement: °C
+
+  - id: boiler_temperature
+    name: Boiler temperature
+    platform: fourheat
+    datapoint: J30017
+    device_class: temperature
+    unit_of_measurement: °C
+
+  - id: water_pressure
+    name: Water pressure
+    platform: fourheat
+    datapoint: J30020
+    device_class: pressure
+    unit_of_measurement: mbar
+
+  - id: airflow
+    name: Airflow
+    icon: "mdi:air-filter"
+    platform: fourheat
+    datapoint: J30026
+    unit_of_measurement: Nr
+
+  - id: comb_fan_speed
+    name: Combustion Fan Speed
+    icon: "mdi:fan"
+    platform: fourheat
+    datapoint: J30025
+    unit_of_measurement: rpm
+
+  - id: room_temperature
+    name: Room temperature
+    platform: fourheat
+    datapoint: J30006
+    device_class: temperature
+    unit_of_measurement: °C
+
+
+number:
+  - id: boiler_target_temperature
+    name: Boiler target temperature
+    platform: fourheat
+    datapoint: B20199
+    device_class: temperature
+    unit_of_measurement: °C
+    min_value: 5
+    max_value: 110
+
+  - id: buffer_thermostat_threshold
+    name: Buffer thermostat threshold
+    platform: fourheat
+    datapoint: B20241
+    device_class: temperature
+    unit_of_measurement: °C
+    min_value: 1
+    max_value: 20
+
+  - id: buffer_target_temperature
+    name: Buffer target temperature
+    platform: fourheat
+    datapoint: B20225
+    device_class: temperature
+    unit_of_measurement: °C
+    min_value: 20
+    max_value: 110
