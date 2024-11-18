@@ -7,7 +7,7 @@ esphome:
   friendly_name: ${friendly_name}
   name_add_mac_suffix: false
   project:
-    name: NG21.catdognaus
+    name: catdognaus.NG21
     version: '1.0'
 
 esp8266:
