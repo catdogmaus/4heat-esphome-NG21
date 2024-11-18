@@ -27,3 +27,7 @@ The way how I personally use this, is to create additional automation in HA to t
 Of course if someone does not like that you can always remove that part. 
 Do not use Night Mode 24/7 all time! It switches off cleaning engine and some other noisy stuff so without no cleaning at all in long run, it would probably not be healthy for you stove.
 
+### combi
+
+This allows to switch between pellet and wood option. To use this uncomment this block. Or if your freplace dont have this ption cleanup. 
+!!! This function has not been tested!!!  My fireplace does not have this.
