@@ -199,11 +199,11 @@ select:
     #platform: fourheat
     #datapoint: B20379
     #options:
-	    #0: "Pellet"
+      #0: "Pellet"
       #1: "Wood"
       #2: "Wood-Pellet"
       #3: "Combi 1"
-	    #4: "Combi 2"
+      #4: "Combi 2"
     
 
 binary_sensor:
