@@ -10,3 +10,6 @@ This is ESPHome yaml file. To use it you have to use ESP8266 or ESP32 board and 
 ### Hardware
 
 You need a ESP8266 or ESP32 board, an RS232 to TTL board and some sort of rs232 connector/adapter. It is possible to use any appropriate board but then you have to change wiring on board side. Fireplace should allow you to use RS 232 pin 1-4 for communication.
+
+![](../master/hardware.png)
+
