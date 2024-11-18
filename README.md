@@ -17,7 +17,7 @@ You need a ESP8266 or ESP32 board, an RS232 to TTL board and some sort of rs232 
 
 ### buffer_thermostat_threshold and buffer_target_temperature
 
-Threshold or also called hysteresis is regulating buffer temperature range when actually fireplace is switched back on. Need for that depends actually how big is your buffer. All NG21 boards have similar options but how the manufacturer uses them is different. When you dont use buffer you should remove those 2 options from yaml.
+Threshold or also called hysteresis is regulating buffer temperature range when actually fireplace is switched back on. Need for that depends actually how big your buffer is. All NG21 boards have similar options but how the manufacturer uses them is different. When you dont use buffer you should remove those 2 options from yaml.
 
 ### Night Mode
 
