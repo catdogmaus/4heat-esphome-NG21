@@ -57,6 +57,8 @@ switch:
         data[size - 1] != '0' ||
         data[size - 2] != '0';
 
+    # Night mode stuff starts
+
   - platform: fourheat
     id: charging_motor_off
     datapoint: B20698
@@ -78,8 +80,7 @@ switch:
     off_data: '0'
     parser: return data[data.size() - 1] != '0';
 
-
-  - platform: template
+  - platform: template    
     name: Enable night mode menu
     lambda: |-
       if (id(charging_motor_off).state) {
@@ -93,14 +94,16 @@ switch:
       - switch.turn_on: Cleaning_Motor_2_Off
       - select.set:
           id: power
-          option: "P3"
+          option: "P3"   # Power to half
     turn_off_action:
       - switch.turn_off: charging_motor_off
       - switch.turn_off: Cleaning_Motor_Off
       - switch.turn_off: Cleaning_Motor_2_Off
       - select.set:
           id: power
-          option: "Auto"
+          option: "Auto" # Power back to auto
+
+       # Night mode stuff ends 
 
 text_sensor:
   - id: state
@@ -194,16 +197,16 @@ select:
       4: "P4"
       5: "P5"
       6: "Auto"
-  #- id: combi
-    #name: Combi Management
-    #platform: fourheat
-    #datapoint: B20379
-    #options:
-      #0: "Pellet"
-      #1: "Wood"
-      #2: "Wood-Pellet"
-      #3: "Combi 1"
-      #4: "Combi 2"
+#  - id: combi
+#    name: Combi Management
+#    platform: fourheat
+#    datapoint: B20379
+#    options:
+#      0: "Pellet"
+#      1: "Wood"
+#      2: "Wood-Pellet"
+#      3: "Combi 1"
+#      4: "Combi 2"
     
 
 binary_sensor:
