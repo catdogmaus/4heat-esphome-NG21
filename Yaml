@@ -150,9 +150,15 @@ text_sensor:
       13: "Ignition"
       14: "Ignition"
       15: "Lack of Voltage Supply"
-      16: "Ignition"
-      17: "Ignition"
+      16: "RS485 communication problem. Touch display does not communicate with the oven."
+      17: "Flowmeter (FCS) error. Cancel and try to restart"
       18: "Lack of Voltage Supply"
+      23: "One of the temperature sensors failed. Cancel and try to restart."
+      25: "Ash grate cleaning blocked. Remove obstruction, restart"
+      39: "Flowmeter (FCS) fail. Cancel and try to restart"
+      41: "Flowmeter data error (Required airflow not reached). Cancel and try to restart"
+      42: "Max airflow exceeded. Cancel and try to restart"
+      44: "Shutdown due to front door opening. Check and close."
 
   - id: combustion_power
     name: Combustion power
