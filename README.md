@@ -34,5 +34,5 @@ This allows to switch between pellet and wood option. To use this uncomment "com
 
 ### Other datapoints
 
-By the papers I have there is theoretically possible to add additional datapoints but those are all related to factory setup and do not add any additional user comfort. Unfortunately all passive sensors, (like temperature, pumps and motors) are possible to find only with communication sniffing. When somebody does that for NG21 it can be added to this yaml or you can fork this.
+By the papers I have there is theoretically possible to add additional datapoints but those are mostly related to factory setup and do not add any additional user comfort. Unfortunately all passive sensors, (like temperature, pumps and motors) are possible to find only with communication sniffing. When somebody does that for NG21 those can be additionaly added to this yaml.
 
