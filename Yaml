@@ -60,48 +60,25 @@ switch:
     # Night mode stuff starts
 
   - platform: fourheat
-    id: charging_motor_off
-    datapoint: B20698
-    on_data: '1'
-    off_data: '0'
-    parser: return data[data.size() - 1] != '0';
-
-  - platform: fourheat
     id: Cleaning_Motor_Off
     datapoint: B20701
     on_data: '1'
     off_data: '0'
     parser: return data[data.size() - 1] != '0';
 
-  - platform: fourheat
-    id: Cleaning_Motor_2_Off
-    datapoint: B20700
-    on_data: '1'
-    off_data: '0'
-    parser: return data[data.size() - 1] != '0';
-
-  - platform: template    
+  - platform: template
     name: Enable night mode menu
     lambda: |-
-      if (id(charging_motor_off).state) {
+      if (id(Cleaning_Motor_Off).state) {
         return true; // if night mode enabled, switch indicates ON
       } else {
         return false; // else OFF
       }
     turn_on_action:
-      - switch.turn_on: charging_motor_off
       - switch.turn_on: Cleaning_Motor_Off
-      - switch.turn_on: Cleaning_Motor_2_Off
-      - select.set:
-          id: power
-          option: "P3"   # Power to half
+
     turn_off_action:
-      - switch.turn_off: charging_motor_off
       - switch.turn_off: Cleaning_Motor_Off
-      - switch.turn_off: Cleaning_Motor_2_Off
-      - select.set:
-          id: power
-          option: "Auto" # Power back to auto
 
        # Night mode stuff ends 
 
