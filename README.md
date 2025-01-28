@@ -27,8 +27,8 @@ I also suggest to add HA automation for power reduction to P3 level so that it w
 
 ### Combi
 
-This allows to switch between pellet and wood option. To use this uncomment "combi" block. Or if your freplace dont have this option cleanup yaml. 
-!!! This function has not been tested!!!  
+This allows to switch between pellet and wood option. To use this uncomment "combi" block. Or if your freplace dont have this option cleanup yaml.
+This function has not been tested!!!  
 My fireplace does not have this.
 
 ### Other datapoints
