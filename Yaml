@@ -239,7 +239,7 @@ sensor:
     icon: "mdi:air-filter"
     platform: fourheat
     datapoint: J30026
-    unit_of_measurement: Nr
+    unit_of_measurement: cm/s
 
   - id: comb_fan_speed
     name: Combustion Fan Speed
@@ -255,6 +255,12 @@ sensor:
     device_class: temperature
     unit_of_measurement: °C
 
+  - id: ambient_fan_voltage
+    name: Ambient Fan Voltage
+    platform: fourheat
+    datapoint: J30009
+    device_class: voltage
+    unit_of_measurement: V
 
 number:
   - id: boiler_target_temperature
