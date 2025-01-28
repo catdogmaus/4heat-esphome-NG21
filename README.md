@@ -9,7 +9,7 @@ This is ESPHome yaml file. To use it you have to use ESP8266 or ESP32 board and 
 
 ### Hardware
 
-You need a ESP8266 or ESP32 board, an RS232 to TTL board and some sort of rs232 connector/adapter. It is possible to use any appropriate board but then you have to change wiring on board side. Fireplace should allow you to use RS 232 pin 1-4 for communication.
+You need a ESP8266 or ESP32 board, an RS232 to TTL board and some sort of rs232 connector/adapter. It is possible to use any appropriate board but then you have to change wiring on board side. Fireplace should allow you to use RS 232 pin 1-4 for communication. 
 
 ![](hardware.png)
 
@@ -22,12 +22,14 @@ Threshold or also called hysteresis is regulating buffer temperature range when 
 ### Night Mode
 
 When you already have night mode in the menu you do not need this part of yaml.
-The way how this works is, you will have additional switch to turn night mode in menu on. When you use it you will have in your stove factory remote/menu settings new item “Night mode”. Find it there, and you can use it exactly like stove "Timer" menu. I also suggest to add HA automation for power reduction to P3 level so that it will additionally reduce noise levels.
+The way how this works is, you will have additional switch to turn night mode in menu on. When you use it you will have in your stove factory remote/menu settings new item “Night mode”. Find it there, and you can use it exactly like stove "Timer" menu. 
+I also suggest to add HA automation for power reduction to P3 level so that it will additionally reduce noise levels.
 
 ### Combi
 
-This allows to switch between pellet and wood option. To use this uncomment "combi" block. Or if your freplace dont have this option, cleanup. 
-!!! This function has not been tested!!!  My fireplace does not have this.
+This allows to switch between pellet and wood option. To use this uncomment "combi" block. Or if your freplace dont have this option cleanup yaml. 
+!!! This function has not been tested!!!  
+My fireplace does not have this.
 
 ### Other datapoints
 
