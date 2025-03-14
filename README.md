@@ -22,7 +22,17 @@ Threshold or also called hysteresis is regulating buffer temperature range when 
 ### Night Mode
 
 When you already have night mode in the menu you do not need this part of yaml.
-The way how this works is, you will have additional switch to turn night mode in menu on. When you use it you will have in your stove factory remote/menu settings new item “Night mode”. Find it there, and you can use it exactly like stove "Timer" menu. 
+Night Mode menu is to set and enable the beginning and ending time slots of the Night Mode.
+The time slots programming is the same as in Chrono Menu. To program it across
+midnight, set a time slot until 23.59 and the following from 00.00 to the time of your
+choiceº.
+Night Mode allows you to disable in the set time slots the functioning of the following
+Engines: Load Engine, Cleaning Engine.
+During the set times, the display shows the message
+Night Mode.
+The menu is displayed only if at least one engine is disabled in Night Mode.
+
+The way how this works in HA is, you will have additional switch to turn night mode in menu on. When you use it you will have in your stove factory remote/menu settings new item “Night mode”. Find it there, and you can use it exactly like stove "Timer" menu. 
 I also suggest to add HA automation for power reduction to P3 level so that it will additionally reduce noise levels.
 
 ### Combi
