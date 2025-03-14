@@ -25,7 +25,7 @@ When you already have night mode in the menu you do not need this part of yaml.
 Night Mode menu is to set and enable the beginning and ending time slots of the Night Mode.
 The time slots programming is the same as in Chrono Menu. To program it across
 midnight, set a time slot until 23.59 and the following from 00.00 to the time of your
-choiceº.
+choice.
 Night Mode allows you to disable in the set time slots the functioning of the following
 Engines: Load Engine, Cleaning Engine.
 During the set times, the display shows the message
