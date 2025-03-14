@@ -32,7 +32,7 @@ During the set times, the display shows the message
 Night Mode.
 The menu is displayed only if at least one engine is disabled in Night Mode.
 
-The way how this works in HA is, you will have additional switch to turn night mode in menu on/off. When you use it you will have in your stove factory remote/menu settings new item “Night mode”.
+The way how this works in HA is, you will have additional switch to turn those engines for night mode off. When you use it you will have in your stove factory remote/menu settings new item “Night mode”.
 I also suggest to add HA automation for power reduction to P3 level so that it will additionally reduce noise levels.
 
 ### Combi
