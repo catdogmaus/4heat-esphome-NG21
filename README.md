@@ -17,7 +17,7 @@ You need a ESP8266 or ESP32 board, an RS232 to TTL board and some sort of rs232 
 
 ### buffer_thermostat_threshold and buffer_target_temperature
 
-Threshold or also called hysteresis is regulating buffer temperature range when actually fireplace is switched back on. Need for that depends actually how big your buffer is. Factory setup for that is only 2C. All NG21 boards have similar options but how the manufacturer uses them is different. When you dont use buffer with your fireplace you should remove those 2 options from yaml.
+Threshold or also called hysteresis is regulating buffer temperature range when actually fireplace is switched back on. Need for that depends actually how big your buffer is. Factory setup for that is only 2°C. All NG21 boards have similar options but how the manufacturer uses them is different. When you dont use buffer at all with your fireplace, you should remove those 2 options from yaml.
 
 ### Night Mode
 
@@ -44,5 +44,5 @@ My fireplace does not have this.
 ### Other datapoints
 
 By the papers I have there is theoretically possible to add additional datapoints but those are mostly related to factory setup and do not add any additional user comfort. 
-Unfortunately all passive sensors, (like temperature, pumps and motors) are possible to find only with communication sniffing. When somebody does that for NG21 those can be additionaly added to this yaml.
+Unfortunately all passive sensors, (like temperature, pumps and motors) are possible to find only with communication sniffing. When somebody does that for NG21 those can be additionaly added to this yaml. When somebody has discovered some additional important datapoints for this board it is possible to let us know in issues page.
 
