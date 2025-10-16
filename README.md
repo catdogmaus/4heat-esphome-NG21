@@ -14,7 +14,9 @@ This is ESPHome yaml file. You will likely need to make some changes to it to su
 ### Hardware
 
 You need a ESP8266 or ESP32 board, an RS232 to TTL board and some sort of rs232 connector/adapter. It is possible to use any appropriate board but then you have to change wiring on board side. Fireplace should allow you to use RS 232 pin 1-4 for communication.   
-Keep in mind, that even though we only use the Rx, Tx and GND pins to connect ESP32 or mini board, there is also a VCC live pin on the NG21 board side. Be careful not to accidentally connect anything this pin. The recommendation here is to use a tester to determine the location of your VCC and GND pins to be absolutely sure. Theoretically, it could be possible to connect the ESP board without an external power supply using only VCC and GND from the NG21 board, but there is not enough power there and the entire system may start to behave strangely. So I personally would not do that.
+Keep in mind, that even though we only use the Rx, Tx and GND pins to connect ESP32 or mini board, there is also a VCC live pin on the NG21 board side. Be careful not to accidentally connect anything this pin. The recommendation here is to use a tester to determine the location of your VCC and GND pins to be absolutely sure.  
+Theoretically, it could be possible to connect the ESP board without an external power supply using only VCC and GND from the NG21 board, but there is not enough power there and the entire system may start to behave strangely. So I personally would not do that.  
+The second thing to consider is a proper external power supply for your ESP board. Although it is a very small chance that if you manage to blow up the ESP board, a cascading error could occur from here which will also kill your NG21 board.
 
 ![](hardware.png)
 
