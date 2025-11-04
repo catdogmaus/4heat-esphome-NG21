@@ -204,6 +204,11 @@ binary_sensor:
     datapoint: J40007
     parser: return data[data.size() - 3] == '0';
 
+  - id: water_pump_state   
+    platform: fourheat
+    name: Circulation pump
+    datapoint: J40016
+    parser: return data[data.size() - 8] == '1';
 
 sensor:
   - id: exhaust_temperature
