@@ -267,6 +267,15 @@ sensor:
     device_class: voltage
     unit_of_measurement: V
 
+# Domestic Hot Water (DHW / Boiler, not tested)
+  - id: dhw_temperature
+    name: "DHW Temperature"
+    platform: fourheat
+    datapoint: J30059
+    device_class: temperature
+    state_class: measurement
+    unit_of_measurement: "°C"
+
 number:
   - id: boiler_target_temperature
     name: Boiler target temperature
@@ -294,3 +303,34 @@ number:
     unit_of_measurement: °C
     min_value: 20
     max_value: 110
+
+# Domestic Hot Water (DHW / Boiler, not tested I dont have DHW)
+  - id: dhw_target_temperature
+    name: "DHW Target Temperature"
+    platform: fourheat
+    datapoint: B20230
+    device_class: temperature
+    unit_of_measurement: "°C"
+    min_value: 30
+    max_value: 80
+    step: 1
+
+ - id: dhw_thermostat_threshold
+    name: "DHW thermostat threshold (TH21)"
+    platform: fourheat
+    datapoint: B20196
+    device_class: temperature
+    unit_of_measurement: "°C"
+    min_value: 30
+    max_value: 80
+    step: 1
+
+ - id: dhw_thermostat_hysteresis
+    name: "DHW thermostat hysteresis (IH21)"
+    platform: fourheat
+    datapoint: B20184
+    device_class: temperature
+    unit_of_measurement: "°C"
+    min_value: 30
+    max_value: 80
+    step: 1
