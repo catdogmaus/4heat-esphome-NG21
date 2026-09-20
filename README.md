@@ -48,6 +48,10 @@ This allows to switch between pellet and wood option. To use this uncomment "com
 This function has not been tested!!!  
 My fireplace does not have this.
 
+### Domestic Hot Water (DHW / Boiler)
+
+This is also not tested by me, I don't have it, but I see no reason why it shouldn’t work. If you want to try it out, you can start with passive sensors; however, when dealing with active settings, it is always a good idea to note down the original settings before making any changes.
+
 ### Other datapoints
 
 By the papers I have there is theoretically possible to add additional datapoints but those are mostly related to factory setup and do not add any additional user comfort. 
