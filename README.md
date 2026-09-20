@@ -50,7 +50,7 @@ My fireplace does not have this.
 
 ### Domestic Hot Water (DHW / Boiler)
 
-This is also not tested by me, I don't have it, but I see no reason why it shouldn’t work. If you want to try it out, you can start with passive sensors; however, when dealing with active settings, it is always a good idea to note down the original settings before making any changes.
+This is also not tested by me, I don't have this, but I see no reason why it shouldn’t work. If you want to try it out, you can start with passive sensors; however, when dealing with active settings, it is always a good idea to note down the original settings before making any changes.
 
 ### Other datapoints
 
