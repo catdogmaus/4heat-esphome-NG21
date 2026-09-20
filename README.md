@@ -5,7 +5,7 @@
 # 4heat-esphome-NG21
 4heat-esphome NG21 board YAML setup
 
-This is a simple YAML file meant to use with https://github.com/leoshusar/4heat-esphome ESPHome integration specifically for Tiemme NG21 boards. There are added specific datapoints according NG21 specifications that differ from leoshusar initial setup. Datapoints meant for other boards most likely ***will not work*** with NG21 (and vice versa)!
+This is a simple YAML file meant to use with https://github.com/leoshusar/4heat-esphome ESPHome integration specifically for Tiemme NG21 boards. There are added specific datapoints according NG21 specifications that differ from leoshusar initial setup. Datapoints meant for other boards most likely ***will not work*** with NG21 (and vice versa)! I also remind that even if sensor responds to certain datapoint does not necessarily mean that you have that ***function***. Computer board is standardized product, your heater is not. Company that builds your fireplace decides what actual functions it wants to include.
 
 ### Usage
 
