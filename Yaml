@@ -10,6 +10,7 @@ esphome:
     name: catdognaus.NG21
     version: '1.0'
 
+# Correct according the board you are using
 esp8266:
   board: d1_mini
 
@@ -34,6 +35,7 @@ captive_portal:
 external_components:
   source: github://leoshusar/4heat-esphome
 
+# change pins according to you board 
 uart:
   tx_pin: GPIO1
   rx_pin: GPIO3
@@ -41,7 +43,11 @@ uart:
 
 fourheat:
 
+# ==============================================================================
+# SWITCHES (Power State & Motor Toggles)
+# ==============================================================================
 switch:
+  # Master stove power switch: queries state via J30001, turns on via J30253, off via J30254
   - id: state_switch
     name: State
     platform: fourheat
@@ -57,8 +63,7 @@ switch:
         data[size - 1] != '0' ||
         data[size - 2] != '0';
 
-    # Night mode stuff starts
-
+  # Param 701 (P 103): Disables brazier mechanical cleaning scraper in Night Mode to reduce noise
   - platform: fourheat
     id: Cleaning_Motor_Off
     datapoint: B20701
@@ -66,23 +71,36 @@ switch:
     off_data: '0'
     parser: return data[data.size() - 1] != '0';
 
+  # Param 698 (P 100): Disables auxiliary pellet loading/charging motor in Night Mode
+  - platform: fourheat
+    id: Load_Engine_Off
+    datapoint: B20698
+    on_data: '1'
+    off_data: '0'
+    parser: return data[data.size() - 1] != '0';
+
+  # Master Night Mode switch: simultaneously activates both silent cleaning and loading modes
   - platform: template
     name: Enable night mode menu
     lambda: |-
       if (id(Cleaning_Motor_Off).state) {
-        return true; // if night mode enabled, switch indicates ON
+        return true;
       } else {
-        return false; // else OFF
+        return false;
       }
     turn_on_action:
       - switch.turn_on: Cleaning_Motor_Off
-
+      - switch.turn_on: Load_Engine_Off
     turn_off_action:
       - switch.turn_off: Cleaning_Motor_Off
+      - switch.turn_off: Load_Engine_Off
 
-       # Night mode stuff ends 
 
+# ==============================================================================
+# TEXT SENSORS (Operational States, Alarms & Diagnostic Logs)
+# ==============================================================================
 text_sensor:
+  # Real-time stove operating phase decoded from live register J30001
   - id: state
     name: State
     platform: fourheat
@@ -106,37 +124,40 @@ text_sensor:
       33: "Ignition"
       34: "Ignition"
 
+  # Active hardware error / alarm message decoded from register J30002 for water heaters. Air heater error structure is different!
   - id: error
     name: Error
     platform: fourheat
     datapoint: J30002
+    entity_category: diagnostic
+    icon: "mdi:alert-circle"
     options:
-      0: "No"
-      1: "Safety Thermostat HV1: signalled also in case of Stove OFF"
-      2: "Safety PressureSwitch HV2: signalled with Combustion Fan ON"
-      3: "Extinguishing for Exhausting Temperature lowering"
-      4: "Extinguishing for water over Temperature"
-      5: "Extinguishing for Exhausting over Temperature"
-      6: "unknown"
-      7: "Encoder Error: No Encoder Signal (in case of P25=1 or 2)"
-      8: "Encoder Error: Combustion Fan regulation failed (in case of P25=1 or 2)"
-      9: "Low pressure in to the Boiler"
-      10: "High pressure in to the Boiler Error"
-      11: "DAY and TIME not correct due to prolonged absence of Power Supply"
-      12: "Failed Ignition"
-      13: "Ignition"
-      14: "Ignition"
-      15: "Lack of Voltage Supply"
-      16: "RS485 communication problem. Touch display does not communicate with the oven."
-      17: "Flowmeter (FCS) error. Cancel and try to restart"
-      18: "Lack of Voltage Supply"
-      23: "One of the temperature sensors failed. Cancel and try to restart."
-      25: "Ash grate cleaning blocked. Remove obstruction, restart"
-      39: "Flowmeter (FCS) fail. Cancel and try to restart"
-      41: "Flowmeter data error (Required airflow not reached). Cancel and try to restart"
-      42: "Max airflow exceeded. Cancel and try to restart"
-      44: "Shutdown due to front door opening. Check and close."
+      0: "No error"
+      1: "Er01: Safety Klixon (Water/Hopper Overheat)"
+      2: "Er02: Flue Blocked / Low Draft"
+      3: "Er03: Flame Out / Low Flue Temp"
+      4: "Er04: High Water Temperature"
+      5: "Er05: High Flue Gas Temperature"
+      7: "Er07: Exhaust Fan Encoder Signal Loss"
+      8: "Er08: Exhaust Fan Regulation Error"
+      9: "Er09: Low Water Pressure"
+      10: "Er10: High Water Pressure"
+      11: "Er11: Clock / RTC Error"
+      12: "Er12: Ignition Failed"
+      15: "Er15: Power Outage / Blackout"
+      16: "Er16: RS485 Display Comm Error"
+      17: "Er17: Airflow Regulation Failed"
+      23: "Er23: Water/Buffer/Return Probe Fault"
+      25: "Er25: Brazier Cleaning Malfunction"
+      39: "Er39: Air Flow Sensor Fault"
+      41: "Er41: Minimum Airflow Not Reached"
+      42: "Er42: Maximum Airflow Exceeded"
+      44: "Er44: Fire Door Open > 120s"
+      47: "Er47: Auger Encoder Signal Loss"
+      48: "Er48: Auger Speed Regulation Error"
+      255: "Undefined"
 
+  # Current active combustion power or transition stage decoded from register J30011
   - id: combustion_power
     name: Combustion power
     platform: fourheat
@@ -161,14 +182,29 @@ text_sensor:
       255: "Ignition"
       0: "Stabilizing"
 
+
+# ==============================================================================
+# BUTTONS (Immediate Actions & Diagnostic Commands)
+# ==============================================================================
 button:
+  # Sends reset command via register J30255 to unblock the motherboard after an alarm
   - id: clear_error
     name: Clear error
     platform: fourheat
     datapoint: J30255
+    icon: "mdi:alert-remove"
+
+  # Restarts the ESPHome microcontroller
+  - platform: restart
+    name: "Restart ESP"
+    entity_category: config
 
 
+# ==============================================================================
+# SELECTORS (User Configuration & Working Modes)
+# ==============================================================================
 select:
+  # Target combustion power level (P1 through P5, or Auto modulation)
   - id: power
     name: Power
     platform: fourheat
@@ -180,94 +216,131 @@ select:
       4: "P4"
       5: "P5"
       6: "Auto"
-#  - id: combi
-#    name: Combi Management
-#    platform: fourheat
-#    datapoint: B20379
-#    options:
-#      0: "Pellet"
-#      1: "Wood"
-#      2: "Wood-Pellet"
-#      3: "Combi 1"
-#      4: "Combi 2"
-    
 
+  # Param 379 (P 11): Fuel mode selector for dual-fuel / combi models (uncomment if applicable)
+  # - id: combi
+  #   name: Combi Mode
+  #   platform: fourheat
+  #   datapoint: B20379
+  #   options:
+  #     0: "Pellet"
+  #     1: "Wood"
+  #     2: "Wood-Pellet"
+  #     3: "Combi 1"
+  #     4: "Combi 2"
+
+
+# ==============================================================================
+# BINARY SENSORS (Live Digital Contacts, Relays & Safety Alerts)
+# ==============================================================================
 binary_sensor:
+  # Detects if communication between ESP and TiEmme motherboard drops offline
   - id: stove_offline
     name: Stove offline
     platform: fourheat
     type: module_offline
+    entity_category: diagnostic
 
+  # Bit 3 of J40007: External dry contact room thermostat status (Closed = Heating Demand)
   - id: room_thermostat_state
     name: Room thermostat state
     platform: fourheat
     datapoint: J40007
     parser: return data[data.size() - 3] == '0';
 
+  # Bit 8 of J40016: Primary circulation water pump relay state (Active / Idle)
   - id: water_pump_state   
     platform: fourheat
     name: Circulation pump
     datapoint: J40016
     parser: return data[data.size() - 8] == '1';
 
+  # Safety monitor: triggers problem alert if system water pressure drops below 400 mbar (0.4 bar)
+  - platform: template
+    name: "Low Water Pressure Warning"
+    device_class: problem
+    lambda: |-
+      if (isnan(id(water_pressure).state)) return false;
+      return id(water_pressure).state < 400;
+
+
+# ==============================================================================
+# SENSORS (Dynamic Temperatures, Pressures, Diagnostics & Internal Bridges)
+# ==============================================================================
 sensor:
+  # Live flue gas / exhaust temperature probe reading (Thermocouple K / PT1000)
   - id: exhaust_temperature
     name: Exhaust temperature
     platform: fourheat
     datapoint: J30005
     device_class: temperature
+    state_class: measurement
     unit_of_measurement: °C
 
+  # Live temperature of the accumulation / buffer tank (Sonda Puffer)
   - id: buffer_temperature
     name: Buffer temperature
     platform: fourheat
     datapoint: J30012
     device_class: temperature
+    state_class: measurement
     unit_of_measurement: °C
 
+  # Live internal boiler water jacket temperature (Sonda Caldaia)
   - id: boiler_temperature
     name: Boiler temperature
     platform: fourheat
     datapoint: J30017
     device_class: temperature
+    state_class: measurement
     unit_of_measurement: °C
 
+  # Live system water pressure reading from electronic pressure transducer
   - id: water_pressure
     name: Water pressure
     platform: fourheat
     datapoint: J30020
     device_class: pressure
+    state_class: measurement
     unit_of_measurement: mbar
 
+  # Live primary combustion air intake velocity measurement
   - id: airflow
     name: Airflow
     icon: "mdi:air-filter"
     platform: fourheat
     datapoint: J30026
     unit_of_measurement: cm/s
+    state_class: measurement
 
+  # Real-time combustion exhaust fan speed feedback via hall-effect encoder
   - id: comb_fan_speed
     name: Combustion Fan Speed
     icon: "mdi:fan"
     platform: fourheat
     datapoint: J30025
     unit_of_measurement: rpm
+    state_class: measurement
 
+  # Onboard or wired ambient room temperature sensor reading
   - id: room_temperature
     name: Room temperature
     platform: fourheat
     datapoint: J30006
     device_class: temperature
+    state_class: measurement
     unit_of_measurement: °C
 
+  # Supply voltage applied to the room convection fan triac
   - id: ambient_fan_voltage
     name: Ambient Fan Voltage
     platform: fourheat
     datapoint: J30009
     device_class: voltage
+    state_class: measurement
     unit_of_measurement: V
 
-# Domestic Hot Water (DHW / Boiler, not tested)
+  # Domestic Hot Water (DHW / Boiler, not tested)
   - id: dhw_temperature
     name: "DHW Temperature"
     platform: fourheat
@@ -276,7 +349,31 @@ sensor:
     state_class: measurement
     unit_of_measurement: "°C"
 
+  # Cumulative operating countdown hours until the mandatory technical service warning (Not in all devices!)
+  - id: service_hours_remaining
+    name: "Service Hours Remaining"
+    platform: fourheat
+    datapoint: I20118
+    unit_of_measurement: "h"
+    entity_category: diagnostic
+
+  # Wi-Fi connection signal strength (RSSI)
+  - platform: wifi_signal
+    name: "WiFi Signal"
+    update_interval: 60s
+    entity_category: diagnostic
+
+  # Microcontroller uptime counter
+  - platform: uptime
+    name: "Uptime"
+    entity_category: diagnostic
+
+
+# ==============================================================================
+# NUMBERS (Adjustable Heating Setpoints, Hysteresis & Pump Cut-Ins)
+# ==============================================================================
 number:
+  # Param 199 (Th 24): Target water temperature maintained inside the boiler jacket
   - id: boiler_target_temperature
     name: Boiler target temperature
     platform: fourheat
@@ -285,16 +382,21 @@ number:
     unit_of_measurement: °C
     min_value: 5
     max_value: 110
+    entity_category: config
 
-  - id: buffer_thermostat_threshold
-    name: Buffer thermostat threshold
+  # Param 215 (Ih 24): Temperature differential before boiler re-ignites after reaching setpoint
+  - id: boiler_hysteresis
+    name: "Boiler Hysteresis"
     platform: fourheat
-    datapoint: B20241
+    datapoint: B20215
     device_class: temperature
-    unit_of_measurement: °C
+    unit_of_measurement: "°C"
     min_value: 1
-    max_value: 20
+    max_value: 10
+    step: 1
+    entity_category: config
 
+  # Param 225 (Th 58): Target temperature for thermal buffer / accumulation tank
   - id: buffer_target_temperature
     name: Buffer target temperature
     platform: fourheat
@@ -304,7 +406,41 @@ number:
     min_value: 20
     max_value: 110
 
-# Domestic Hot Water (DHW / Boiler, not tested I dont have DHW)
+  # Param 241 (Ih 58): Thermal buffer thermostat hysteresis / restart threshold
+  - id: buffer_thermostat_threshold
+    name: Buffer thermostat threshold
+    platform: fourheat
+    datapoint: B20241
+    device_class: temperature
+    unit_of_measurement: °C
+    min_value: 1
+    max_value: 20
+
+  # Param 194 (Th 19): Water temperature threshold at which the circulation pump starts
+  - id: pump_activation_temp
+    name: "Pump Activation Temperature"
+    platform: fourheat
+    datapoint: B20194
+    device_class: temperature
+    unit_of_measurement: "°C"
+    min_value: 40
+    max_value: 70
+    step: 1
+    entity_category: config
+
+  # Param 210 (Ih 19): Temperature drop required before the circulation pump turns off
+  - id: pump_activation_hysteresis
+    name: "Pump Activation Hysteresis"
+    platform: fourheat
+    datapoint: B20210
+    device_class: temperature
+    unit_of_measurement: "°C"
+    min_value: 1
+    max_value: 10
+    step: 1
+    entity_category: config
+
+  # Domestic Hot Water (DHW / Boiler, not tested I dont have DHW)
   - id: dhw_target_temperature
     name: "DHW Target Temperature"
     platform: fourheat
