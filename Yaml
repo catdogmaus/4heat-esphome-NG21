@@ -263,6 +263,39 @@ binary_sensor:
       if (isnan(id(water_pressure).state)) return false;
       return id(water_pressure).state < 400;
 
+  # Newly decoded: Terminal A1 (Pins 9-10) - Active during Ignition
+  - id: igniter_glow_plug
+    platform: fourheat
+    name: "Igniter (Glow Plug)"
+    icon: "mdi:fire-alert"
+    datapoint: J40016
+    parser: return data[data.size() - 6] == '1';
+
+  # Newly decoded: Terminal V1 (Pins 3-4) - Runs during firing and final cooling
+  - id: exhaust_fan_active
+    platform: fourheat
+    name: "Exhaust Fan Active"
+    icon: "mdi:fan"
+    datapoint: J40016
+    parser: return data[data.size() - 3] == '1';
+
+  # Newly decoded: Terminal V3 (Pins 7-8) - Brazier cleaning scraper motor
+  - id: brazier_cleaner_motor
+    platform: fourheat
+    name: "Brazier Cleaning Motor"
+    icon: "mdi:broom"
+    datapoint: J40016
+    parser: return data[data.size() - 7] == '1';
+
+  # Newly decoded: Terminal IN8 (Pins 48-49) - Brazier scraper home limit switch
+  - id: brazier_cleaner_limit_switch
+    platform: fourheat
+    name: "Brazier Cleaner Home Switch"
+    icon: "mdi:electric-switch"
+    entity_category: diagnostic
+    datapoint: J40007
+    parser: return data[data.size() - 8] == '1';
+
 
 # ==============================================================================
 # SENSORS (Dynamic Temperatures, Pressures, Diagnostics & Internal Bridges)
